@@ -44,7 +44,7 @@ func (c *Crawler) start() {
 func (c *Crawler) filter(url string) {
   temp := false
   for _, fn := range c.filters {
-    temp = fn(url, c)
+    temp = fn(url, *c)
     if temp != true {
       return 
     }
@@ -53,7 +53,7 @@ func (c *Crawler) filter(url string) {
 }
 
 // find all text on page
-func (c *Crawler) crawl(url String) {
+func (c *Crawler) crawl(url string) {
   resp, err := http.Get(url)
   if err != nil {
     fmt.Println("An Error has ocurred")
@@ -99,7 +99,7 @@ func (c *Crawler) extractUrls(Url, body string) {
 
 func (c *Crawler) addFilter(filter filterFunc) Crawler {
   c.filters = append(c.filters, filter)
-  return c
+  return *c
 }
 
 func (c *Crawler) stop() {
@@ -115,13 +115,15 @@ func main() {
     make(chan string),
     make(chan string),
     make([]filterFunc, 0),
-    regexp.MustCompile("(?s)<a[ t]+.*?href="(http.*?)".*?>.*?</a>"),
+    regexp.MustCompile(`(?s)<a[ t]+.*?href="(http.*?)".*?>.*?</a>`),
     0,
   }
 
   c.addFilter(func(Url string, c Crawler) bool {
     return strings.Contains(Url, c.host)
-  }).start()
+  })
+
+  c.start()
 
   c.urls <- c.host
 
