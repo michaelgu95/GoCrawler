@@ -10,7 +10,7 @@ import (
   "strings"
 )
 
-const NCPU = 8
+const NUM_CPU = 8
 
 type filterFunc func(string, Crawler) bool
 
@@ -108,7 +108,7 @@ func (c *Crawler) stop() {
 }
 
 func main() {
-  runtime.GOMAXPROCS(NCPU)
+  runtime.GOMAXPROCS(NUM_CPU)
 
   c := Crawler{
     "http://www.thesaurus.com/", 
