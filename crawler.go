@@ -24,13 +24,13 @@ type Crawler struct {
 }
 
 func (c *Crawler) start() {
-  // url filtering thread, send filtered urls to urls channel
+  // url filtering thread that sends filtered urls to urls chan
   go func() {
     for n := range c.urls {
       go c.filter(n)
     }
   }()
-  // crawling thread, waiting for filtered urls from urls channel
+  // crawling thread that waits for filtered urls from filteredUrls chan
   go func() {
     for s := range c.filteredUrls {
       fmt.Println(s)
